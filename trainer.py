@@ -44,9 +44,56 @@ def filterWords(name):
 
 	return words
 
+# Generate an edge list connect source to nodes
+def edgeListFrom(source, toNodes=[]):
+	edgeList = []
+	for node in toNodes:
+		if source is not node:
+			edgeList.append((source, node))
+
+	return edgeList
+
+# Adds the node to the graph if the node is not in the graph
+# else it increases the node's value
+def addNodeToGraph(node, graph):
+	if node in graph.nodes:
+		graph.node[name]['value'] += 1
+	else:
+		graph.add_node(name, value=1)
+
 # Build an associative network
 def buildGraph(nouns):
 	graph = nx.Graph()
+
+	for noun in nouns:
+		# Get a list of its synsets, pos = wn.NOUN
+		synsets = wn.synsets(noun, pos=wn.NOUN)
+		# If synsets exist
+		if len(synsets) > 0:
+			# Add all the synsets to the graph
+			for synset in synsets:
+				name = synset.name()
+				# Add the synset to the graph
+				addNodeToGraph(name, graph)
+				
+			# connect all the synsets toegether
+			for synset in synsets:
+				edgeList = edgeListFrom(synset, toNodes=synsets)
+				graph.add_edges_from(edgeList)
+
+			# Add all the synsets's hypernyms to the graph
+			for synset in synsets:
+				hypernyms = wn.hypernyms(synset)
+
+				for hypernym in hypernyms:
+					addNodeToGraph(hypernym.name(), graph)
+
+				# Then connect them
+				edgeList = edgeListFrom(synset, toNodes=hypernyms)
+				graph.add_edges_from(edgeList)
+		else:
+			# Find its wikipedia summary, 2 sentences
+
 
 def main():
 	print "fileName"
