@@ -44,7 +44,7 @@ def filterWords(line):
 
 	return words
 
-# Generate an edge list connect source to nodes
+# Generate an edge list to connect source to toNodes
 def edgeListFrom(source, toNodes=[]):
 	edgeList = []
 	for node in toNodes:
@@ -56,10 +56,17 @@ def edgeListFrom(source, toNodes=[]):
 # Adds the node to the graph if the node is not in the graph
 # else it increases the node's value
 def addNodeToGraph(node, graph):
-	if node in graph.nodes:
-		graph.node[name]['value'] += 1
+	if node in graph.nodes():
+		graph.node[node]['value'] += 1
 	else:
-		graph.add_node(name, value=1)
+		graph.add_node(node, value=1)
+
+# Return an array of the list of synsets' names
+def synsetNames(synsets):
+	arr = []
+	for synset in synsets:
+		arr.append(synset.name())
+	return arr
 
 # Add synsets and its hypernyms to the graph
 def addToGraph(synsets, graph):
@@ -69,18 +76,18 @@ def addToGraph(synsets, graph):
 		
 	# connect all the synsets toegether
 	for synset in synsets:
-		edgeList = edgeListFrom(synset, toNodes=synsets)
+		edgeList = edgeListFrom(synset.name(), toNodes=synsetNames(synsets))
 		graph.add_edges_from(edgeList)
 
 	# Add all the synsets's hypernyms to the graph
 	for synset in synsets:
-		hypernyms = wn.hypernyms(synset)
+		hypernyms = synset.hypernyms()
 
 		for hypernym in hypernyms:
 			addNodeToGraph(hypernym.name(), graph)
 
 		# Then connect them
-		edgeList = edgeListFrom(synset, toNodes=hypernyms)
+		edgeList = edgeListFrom(synset.name(), toNodes=synsetNames(hypernyms))
 		graph.add_edges_from(edgeList)
 
 # Translate nouns in the document to synsets and adds them to the graph
@@ -98,26 +105,28 @@ def handleDocumentNouns(nouns, graph):
 			try:
 				summary = wiki.summary(noun, sentences=2)
 				# get the nouns from the summary
-				summaryNouns = tagsFilter(summary)[1]
+				tokens = nltk.word_tokenize(summary)
+				tags = nltk.pos_tag(tokens)
+				summaryNouns = tagsFilter(tags)[1]
 				# For each noun in nouns
-					for noun in summaryNouns:
-					# If the noun have synsets
-						synsets = wn.synsets(noun)
-						if len(synsets) > 0:
-						# Add synsets and hypernyms to the graph
-							addToGraph(synsets, graph)
+				for noun in summaryNouns:
+				# If the noun have synsets
+					synsets = wn.synsets(noun)
+					if len(synsets) > 0:
+					# Add synsets and hypernyms to the graph
+						addToGraph(synsets, graph)
 			except:
 				# If we can't find the term on wikipedia, skip it
 				continue
 
-def main():
-	print "fileName"
-	fileName = raw_input()
-	significant = filterWords(fileName)
+# def main():
+# 	print "fileName"
+# 	fileName = raw_input()
+# 	significant = filterWords(fileName)
 
-	graph = nx.Graph()
-	handleDocumentNouns(significant["NN"], graph)
-	# sentiment = determineSemtiment(significant[0])
+# 	graph = nx.Graph()
+# 	handleDocumentNouns(significant["NN"], graph)
+# 	# sentiment = determineSemtiment(significant[0])
 
 
-main()
+# main()
