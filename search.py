@@ -4,6 +4,53 @@ import os
 import glob
 import time
 
+def bfsNoun(graph, noun):
+	if noun not in graph.nodes():
+		return 0
+
+	total = graph[noun]["value"]
+
+	arr = []
+
+	for node in graph.nodes():
+		graph.node[node]["visited"] = False
+
+	# Append root's edges to the edge list
+	for edge in graph.edges(noun):
+		arr.append(edge[1])
+
+	while len(arr) > 0:
+		cur = arr.pop(0)
+		
+		graph.node[cur]["visited"] = True
+
+		# add all the edges of the current node to edge list
+		for edge in graph.edges(cur):
+			# if the node has not been visited
+			if not graph.node[edge[1]]["visited"]:
+				arr.append(edge[1])
+
+		# add the cur node's value to total
+		total += graph.node[cur]["value"]
+
+	return total
+
+def valueSum(graph):
+	total = 0
+
+	for node in graph.nodes():
+		total += graph.node[node]["value"]
+
+	return total
+
+def findMatchRate(graph, nouns):
+	matchVal = 0
+
+	for noun in nouns:
+		matchVal += bfsNoun(graph, noun)
+
+	return matchVal / valueSum(graph)
+
 def main():
 	# List all the avaliable graphs and their names
 	baseDir = "/Users/francis/Documents/cpe480_texts/"
