@@ -4,6 +4,6 @@ import sys
 
 graphLoc = sys.argv[1]
 print "Drawing adjList:", graphLoc
-graph = nx.read_adjlist(graphLoc)
+graph = nx.read_gml(graphLoc)
 nx.draw_networkx(graph)
 plot.show()

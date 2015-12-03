@@ -1,5 +1,5 @@
 import networkx as nx
-import builder
+import builderlib as blib
 import os
 import glob
 import time
@@ -13,7 +13,7 @@ import time
 # Reads the path of the article and either postive or negatively
 # reinforces the nodes in the graph
 def reinforce(graph, path, posReinforce):
-	significant = builder.filterWords(path)
+	significant = blib.filterWords(path)
 
 	for noun in significant["NN"]:
 		try:
@@ -26,46 +26,66 @@ def reinforce(graph, path, posReinforce):
 		except:
 			continue
 
-# Delete nodes with a value lower than or equal to the value
+def averageValue(graph):
+	sumVal = 0
+
+	for node in graph.nodes():
+		sumVal += graph.node[node]["value"]
+
+	return sumVal // len(graph.nodes())
+
+# Delete nodes with a value lower than the value
 def prune(graph, value):
 	for node in graph.nodes():
-		if node["value"] <= value:
-			del node
+		if graph.node[node]["value"] < value:
+			graph.remove_node(node)
 
 def main():
 	# baseDir = base directory of sub sector
-	baseDir = "/Users/francis/Documents/cpe480_texts/basicmaterials/oilngasdrilling/"
+	baseDir = "/Users/francis/Documents/cpe480_texts/basicmaterials/chemicals/"
 	# graphLoc = location of edgelist
-	graphName = "oilngasdrilling.graph"
+	graphName = "chemicals.graph"
 
 	# graph = load edgelist
-	graph = nx.read_adjlist(baseDir + graphLoc)
+	graph = nx.read_gml(baseDir + graphName)
 
 	# Get all article names in posdir
+	print "Begin positive..."
 	os.chdir(baseDir + "positive")
 	posArticles = glob.glob("*.txt")
 	# for each article in posArticles
+	count = 1
 	for article in posArticles:
-		print "[Positive] Begin", article, "...."
+		print "Reinforceing", count, "of", len(posArticles),"-", article
 		start = time.time()
-		reinforce(graph, article, true)
+		reinforce(graph, article, True)
 		print "Time Elapsed:", time.time() - start
+		print
+		count += 1
 
 	# Get all article names in negdir
 	os.chdir(baseDir + "negative")
 	negArticles = glob.glob("*.txt")
+	count = 1
+	print "Begin negative..."
 	# for each article in negArticles
 	for article in negArticles:
-		print "[Negative] Begin", article, "...."
+		print "Reinforceing", count, "of", len(posArticles),"-", article
 		start = time.time()
-		reinforce(graph, article, false)
+		reinforce(graph, article, False)
 		print "Time Elapsed:", time.time() - start
+		print
+		count += 1
 
 	# Prune the graph
-	prune(graph, 2)
+	print "Pruning begins..."
+	avgVal = averageValue(graph)
+	print "Graph have", len(graph.nodes()), "nodes"
+	prune(graph, avgVal)
+	print "After prunning, graph have", len(graph.nodes()), "nodes"
 
 	# Write the graph back to edgelist
 	os.chdir(baseDir)
-	nx.write_adjlist(graph, graphName)
+	nx.write_gml(graph, graphName)
 
 main()
