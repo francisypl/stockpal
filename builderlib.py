@@ -21,6 +21,19 @@ def tagsFilter(tags):
 def removeNonAscii(s): 
 	return "".join(i for i in s if ord(i)<128)
 
+def tokenizeAndTag(sentence):
+	words = {"JJ": [], "NN": []}
+	
+	tokens = nltk.word_tokenize(removeNonAscii(sentence))
+	tags = nltk.pos_tag(tokens)
+	
+	res = tagsFilter(tags)
+
+	words["JJ"].extend(res[0])
+	words["NN"].extend(res[1])
+
+	return words
+
 # Tokenize and pos tag words then filter them 
 # and return significant words
 def filterWords(name):

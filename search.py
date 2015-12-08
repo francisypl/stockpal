@@ -1,14 +1,17 @@
 import networkx as nx 
+from nltk.corpus import wordnet as wn
 import builderlib as blib
 import os
+import sys
 import glob
+import wikipedia as wiki
 import time
 
 def bfsNoun(graph, noun):
 	if noun not in graph.nodes():
 		return 0
 
-	total = graph[noun]["value"]
+	total = graph.node[noun]["value"]
 
 	arr = []
 
@@ -46,8 +49,27 @@ def valueSum(graph):
 def findMatchRate(graph, nouns):
 	matchVal = 0
 
+	count = 1
 	for noun in nouns:
-		matchVal += bfsNoun(graph, noun)
+		sys.stdout.write("\rMatching %d of %d" % (count, len(nouns)))
+		sys.stdout.flush()
+
+		synsets = wn.synsets(noun)
+
+		if len(synsets) == 0:
+			try:
+				summary = wiki.summary(noun, sentences=2)
+				wikiWords = blib.tokenizeAndTag(summary)
+
+				for wikiWord in wikiWords["NN"]:
+					synsets.extend(wn.synsets(wikiWord))
+			except:
+				pass
+
+		for synset in synsets:
+			matchVal += bfsNoun(graph, synset.name())
+
+		count += 1
 
 	return matchVal / valueSum(graph)
 
@@ -55,18 +77,20 @@ def main():
 	# List all the avaliable graphs and their names
 	baseDir = "/Users/francis/Documents/cpe480_texts/"
 	graphs = {
-		"Basic Materials : Oil And Gas" : baseDir + "basicmaterials/oilngasdrilling/oilngasdrilling.graph"
+		"Basic Materials : Oil And Gas" : baseDir + "basicmaterials/oilngasdrilling/oilngasdrilling.graph",
 		"Basic Materials : Chemicals"   : baseDir + "basicmaterials/chemicals/chemicals.graph"
 	}
 
 	matchRate = {}
 
-	currentArticleLoc = ""
+	currentArticleLoc = "/Users/francis/Documents/cpe480_texts/unmatched/" + sys.argv[1]
 
 	articleWords = blib.filterWords(currentArticleLoc)
-
 	# For each graph in graphs
+	begin = time.time()
+	print "Begin Matching..."
 	for name, graphLoc in graphs.iteritems():
+		print "Matching", name, "graph..."
 		# load the graph
 		graph = nx.read_gml(graphLoc)
 		# find the match rate
@@ -82,7 +106,9 @@ def main():
 
 		print name, ":", rate
 
+	print sys.argv[1], "..."
 	print "Matched to", highest[0], ": Match Rate", highest[1]
+	print "Time Elapsed:", (time.time() - begin) / 60, "mins"
 
 
 main()
