@@ -1,0 +1,18 @@
+Why a Fall in Fractionation Spread Impacted MLPs Last Week
+Fractionation spread
+The Henry Hub-Mont Belvieu fractionation spread fell to $11.1 per barrel in the week ending December 4, 2015. The spread was $11.2 per barrel in the previous week. The Henry Hub-Mont Belvieu fractionation spread measures the spread between Henry Hub natural gas and Mont Belvieu composite NGL (natural gas liquid) prices. The composite NGL price is based on spot prices for ethane, propane, isobutane, n-butane, and natural gasoline at Mont Belvieu. The relatively greater fall in the NGL composite price compared to the fall in natural gas price resulted in a fall in the spread between the two during the week.
+
+The above graph shows the weekly fractionation spread over six weeks. DCP Midstream Partners (DPM), Targa Resources Partners (NGLS), Tallgrass Energy Partners (TEP), and Western Gas Partners (WES) are some of the MLPs involved in fractionation. Targa Resources Partners forms 4.3% of the Global X MLP ETF (MLPA), an ETF that consists of 30 energy sector MLPs.
+
+How are MLPs impacted by the fractionation spread?
+Natural gas recovered from a wellhead must be processed in order to meet specifications before it can be delivered for final use. In addition to natural gas, processing produces mixed NGLs, which are separated through fractionation. NGLs are typically priced higher than natural gas.
+
+The spread between NGL prices and natural gas prices impacts natural gas-processing MLPs involved in fractionation. These MLPs typically benefit when the fractionation spread is high. This means that NGL prices are high relative to natural gas prices. This benefit stems from the keep-whole and percentage-of-proceeds contracts that these MLPs maintain.
+
+Keep-whole contracts
+Keep-whole contracts are sensitive to commodity prices. Under keep-whole contracts, the processing MLP generally keeps a portion of the NGLs extracted through fractionation as payment. The MLP replaces the energy content of the NGLs that it retained with natural gas. A fall in NGL prices relative to natural gas prices makes the spread less favorable for fractionating MLPs under keep-whole contracts.
+
+Percentage-of-proceeds contracts
+In percentage-of-proceeds contracts, the MLP gathers and processes natural gas on behalf of producer customers. It sells the residue gas and NGL produced from processing. Then the company remits an already agreed-upon percentage of the proceeds to the producer and retains the rest. As a result, the prices of natural gas and NGLs impact the revenue of MLPs that hold these types of contracts.
+
+Percentage-of-proceeds contracts account for nearly 85% of the total volume of ONEOK Partners’ (OKS) Natural Gas Gathering and Processing segment. To learn more about ONEOK Partners’ Natural Gas Gathering and Processing segment, please read Natural Gas Liquids Segment May Drive OKS’s 3Q15 EBITDA Growth.
